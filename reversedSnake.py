@@ -98,7 +98,7 @@ class Snake(pygame.sprite.Sprite):
         self.width = self.rect.width
         self.height = self.rect.height
         self.rect=Rect(self.x, self.y, self.width,self.height)
-        self.direction = move_direction["DOWN"]
+        self.direction = move_direction["LEFT"]
         self.offsetX = 0
         self.offsetY = 0
         self.prev_direction = -1        
@@ -112,30 +112,22 @@ class Snake(pygame.sprite.Sprite):
     def update(self):
         if self.isAnimating:
             self.move(self.direction)
-            self.animate()
+            self.animate(self.direction)
 
     def move(self,direction):
         if direction == move_direction["LEFT"]:
-            if self.isTurned() == False:
-                self.images[2]= pygame.transform.rotate(self.images[2], -90)
-                self.prev_direction == self.direction
             self.x -= 5
             self.offsetX = +self.width
             self.offsetY = 0
         if direction == move_direction["RIGHT"]:
             self.x += 5
-            self.offsetX = self.width
+            self.offsetX = -self.width
             self.offsetY = 0
         if direction == move_direction["UP"]:
             self.y -= 5
             self.offsetX = 0
             self.offsetY = +self.height
         if direction == move_direction["DOWN"]:
-            if self.isTurned() == False:
-                print("TRUE")
-                self.prev_direction = self.direction
-                self.images[2]= pygame.transform.rotate(self.images[2], -180)
-                
             self.y += 5
             self.offsetX = 0
             self.offsetY = -self.height     
@@ -149,8 +141,21 @@ class Snake(pygame.sprite.Sprite):
     def startAnimation(self):
         self.isAnimating = True
 
-    def animate(self):        
-        self.images[2]= pygame.transform.flip(self.images[2], True, False)
+    def animate(self,direction):
+        if self.isTurned() == False:
+            if direction == move_direction["LEFT"]:
+                self.images[2]= pygame.transform.rotate(self.images[2], 90)
+            elif direction == move_direction["RIGHT"]:
+                self.images[2]= pygame.transform.rotate(self.images[2], -90)
+            elif direction == move_direction["UP"]:
+                self.images[2]= pygame.transform.rotate(self.images[2], 0)
+            elif direction == move_direction["DOWN"]:
+                self.images[2]= pygame.transform.rotate(self.images[2], -90)
+        self.prev_direction = self.direction
+        if direction == move_direction["LEFT"] or direction == move_direction["RIGHT"]:
+            self.images[2]= pygame.transform.flip(self.images[2], False, True)
+        elif direction == move_direction["UP"] or direction == move_direction["DOWN"]:
+            self.images[2]= pygame.transform.flip(self.images[2], True, False)    
         #self.images[2]= pygame.transform.rotate(self.images[2], -90)
         time.sleep(0.2)
 
